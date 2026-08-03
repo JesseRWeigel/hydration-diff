@@ -120,6 +120,32 @@ test('an in-root pre-hydration mutation is a cause and an out-of-root one is onl
   assert.deepEqual(note.extensions, ['ColorZilla']);
 });
 
+test('an app that carries data-gramm elsewhere is not blamed on Grammarly', () => {
+  // The opt-out attribute `data-gramm="false"` is something applications add themselves. A sweep
+  // over the whole tree found it and named Grammarly for a mutation that had nothing to do with
+  // it, so detection is scoped to the mutation.
+  const parsed = parse('<body><div id="root"><textarea data-gramm="false"></textarea><form><input></form></div></body>');
+  const mutated = parse('<body><div id="root"><textarea data-gramm="false"></textarea><form><div data-lastpass-icon-root=""></div><input></form></div></body>');
+  const out = classifyWith({
+    mutation: diffTrees(parsed, mutated, { rootId: 'root' }),
+    hydration: diffTrees(mutated, parsed, { rootId: 'root' }),
+    pre: mutated,
+  });
+  const mutation = out.causes.find((c) => c.id === 'external-dom-mutation');
+  assert.deepEqual(mutation.extensions, ['LastPass']);
+});
+
+test('an extension identified by an id rather than an attribute name is still named', () => {
+  const parsed = parse('<body><div id="root"><p>x</p></div></body>');
+  const mutated = parse('<body><div id="root"><p>x</p><div id="grammarly-toolbar"></div></div></body>');
+  const out = classifyWith({
+    mutation: diffTrees(parsed, mutated, { rootId: 'root' }),
+    hydration: diffTrees(mutated, parsed, { rootId: 'root' }),
+    pre: mutated,
+  });
+  assert.deepEqual(out.causes.find((c) => c.id === 'external-dom-mutation').extensions, ['Grammarly']);
+});
+
 test('the structural causes are ranked ahead of the runtime ones', () => {
   const repair = diffTrees(wrap('<p><div>x</div></p>'), wrap('<p></p><div>x</div><p></p>'), { rootId: 'root' });
   const out = classifyWith({

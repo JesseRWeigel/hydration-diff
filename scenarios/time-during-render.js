@@ -45,6 +45,6 @@ export default {
       cause: 'nondeterministic-time',
       api: 'new Date()',
     },
-    fixed: { minMismatches: 0 },
+    fixed: { minMismatches: 0, settledChange: true },
   },
 };

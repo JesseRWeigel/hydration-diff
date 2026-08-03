@@ -24,7 +24,7 @@ const statusFile = statusIdx === -1 ? null : args[statusIdx + 1];
 const runs = data.captures;
 const causeIds = [...new Set(runs.filter((c) => !c.scenario.control && c.scenario.cause).map((c) => c.scenario.cause))];
 const brokenRuns = runs.filter((c) => c.counts.hydration > 0).length;
-const unitTests = 49;
+const unitTests = 51;
 
 function runCli(id, variant) {
   return execFileSync(process.execPath, [join(root, 'bin', 'hydration-diff.js'), 'run', id, variant], {
@@ -200,7 +200,9 @@ Requires Node 20 or newer and Python 3 (for the independent checker).
 - **${data.captures.length} live runs**, each a real server process and a real client process with
   their own \`TZ\` and locale, a real \`renderToString\`, and a real \`hydrateRoot\`. React's own
   \`onRecoverableError\` is captured on every run and must agree: broken variants make React
-  complain, fixed variants make it silent.
+  complain, fixed variants make it silent. Where the fix is "do it after mount", the fixed variant
+  must also still change the DOM once effects have run, because a fix that deleted the feature
+  would otherwise pass the negative control.
 - **An independent checker in Python** (\`scripts/independent-check.py\`) that shares no code with
   the engine. Different language, different HTML parser, different tree, different comparison. It
   re-derives every verdict, and separately checks that each reported value literally occurs in the

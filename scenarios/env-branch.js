@@ -63,6 +63,6 @@ export default {
       cause: 'environment-branch',
       api: 'typeof window',
     },
-    fixed: { minMismatches: 0 },
+    fixed: { minMismatches: 0, settledChange: true },
   },
 };

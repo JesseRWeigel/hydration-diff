@@ -47,6 +47,6 @@ export default {
       cause: 'client-only-storage',
       api: 'localStorage.getItem()',
     },
-    fixed: { minMismatches: 0 },
+    fixed: { minMismatches: 0, settledChange: true },
   },
 };

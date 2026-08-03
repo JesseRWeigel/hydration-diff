@@ -107,6 +107,17 @@ for (const scenario of scenarios) {
       else bad(`${label}: unexpected parser repair (${capture.counts.repair} change(s))`);
     }
 
+    // A "fixed" variant that simply deleted the feature would also report no mismatch, and would
+    // not be a fix. So where the fix is "do it after mount", the DOM has to actually change once
+    // effects have run. This is the assertion that separates repairing the bug from removing it.
+    if (expect.settledChange === true) {
+      if (capture.counts.settled > 0) {
+        ok(`${label}: the DOM still changes after effects run (${capture.counts.settled} change(s)), so the behaviour was moved and not deleted`);
+      } else {
+        bad(`${label}: nothing changed after hydration, so the fix may have removed the feature rather than deferred it`);
+      }
+    }
+
     if (expect.mutation === true) {
       if (capture.counts.mutationAnywhere > 0) {
         ok(`${label}: the DOM changed between parse and hydrate (${capture.counts.mutationAnywhere} change(s))`);

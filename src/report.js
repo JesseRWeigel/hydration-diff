@@ -41,9 +41,11 @@ function stage(title, result, { includeOutside = false } = {}) {
     return lines;
   }
   for (const op of ops) {
-    for (const line of opLine(op, { left: result.leftLabel, right: result.rightLabel })) {
-      lines.push(op.scope === 'outside-root' ? `${line}   [outside the hydration root]` : line);
-    }
+    const rendered = opLine(op, { left: result.leftLabel, right: result.rightLabel });
+    // The scope note belongs on the heading line only; repeating it on every value line was
+    // noise that made a two-line op look like two ops.
+    if (op.scope === 'outside-root') rendered[0] += '   [outside the hydration root]';
+    for (const line of rendered) lines.push(line);
   }
   return lines;
 }
@@ -84,6 +86,15 @@ export function reportText(capture) {
   out.push('');
   out.push(...stage('3. hydration mismatch', capture.diffs.hydration));
   out.push('');
+
+  // Not a stage of the comparison, but the thing people confuse with one. A correct fix moves the
+  // client-only work into an effect, so the DOM changes after hydration. That change is not a
+  // mismatch, and saying so out loud stops the fixed version looking like a deleted feature.
+  if (counts.settled > 0) {
+    out.push(`After hydration and effects, React updated ${counts.settled} node(s). That is a`);
+    out.push('post-hydration render, not a mismatch.');
+    out.push('');
+  }
 
   out.push('What React itself reported:');
   if (react.recoverable.length === 0 && react.consoleErrors.length === 0) {

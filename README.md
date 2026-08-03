@@ -19,7 +19,7 @@ nesting-div-in-p [broken]  <div> inside <p>, repaired by the HTML parser before 
 
 Cause:
   Invalid HTML nesting, repaired by the parser before React saw it  [certain]
-      <div> inside <p> at body[0] > div[0] > article[0] > p[0] > div[0]: <div> is not phrasing content, so the parser closes the paragraph before it and opens a new empty one after it.
+      <div> inside <p> at body[0] > div#root[0] > article[0] > p[0] > div[0]: <div> is not phrasing content, so the parser closes the paragraph before it and opens a new empty one after it.
       fix: Emit markup the parser will keep. A <p> may only contain phrasing content, and a second <p> closes the first.
 
 First divergence in document order: body[0] > div#root[0] > article[0] > p[0] > div[0]
@@ -50,6 +50,9 @@ First divergence in document order: body[0] > div#root[0] > article[0] > p[0] > 
        which is faster than yesterday.
   node at body[0] > div#root[0] > article[0] > p[1] exists only in DOM at hydration time
       <p></p>
+
+After hydration and effects, React updated 5 node(s). That is a
+post-hydration render, not a mismatch.
 
 What React itself reported:
   onRecoverableError: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-...
@@ -165,6 +168,9 @@ First divergence in document order: body[0] > div#root[0] > div[0]
       DOM at hydration time: Theme: light
       what the client render produced: Theme: dark
 
+After hydration and effects, React updated 3 node(s). That is a
+post-hydration render, not a mismatch.
+
 What React itself reported:
   onRecoverableError: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-...
       innermost component in React's stack: at p (<anonymous>)
@@ -217,11 +223,13 @@ Requires Node 20 or newer and Python 3 (for the independent checker).
 
 ## How it is verified
 
-- **49 unit tests** over the parser, the alignment, the cause rules and the traps.
+- **51 unit tests** over the parser, the alignment, the cause rules and the traps.
 - **18 live runs**, each a real server process and a real client process with
   their own `TZ` and locale, a real `renderToString`, and a real `hydrateRoot`. React's own
   `onRecoverableError` is captured on every run and must agree: broken variants make React
-  complain, fixed variants make it silent.
+  complain, fixed variants make it silent. Where the fix is "do it after mount", the fixed variant
+  must also still change the DOM once effects have run, because a fix that deleted the feature
+  would otherwise pass the negative control.
 - **An independent checker in Python** (`scripts/independent-check.py`) that shares no code with
   the engine. Different language, different HTML parser, different tree, different comparison. It
   re-derives every verdict, and separately checks that each reported value literally occurs in the
@@ -288,10 +296,10 @@ hydration-diff verification
   ok    next 16.2.12 (fixture)
 
 2. unit suite
-  ok    49 unit tests pass
+  ok    51 unit tests pass
 
 3. live scenario runs (two processes each, real render, real hydration)
-  ok    80 assertions across 18 live runs
+  ok    84 assertions across 18 live runs
   ok    every non-control scenario ships a broken variant and a fixed one
   ok    7 distinct causes reproduced
 
@@ -299,7 +307,7 @@ hydration-diff verification
   ok    6 passed in the independent checker
 
 5. the page, in a real browser
-  ok    wrote docs/index.html (89.5 KB, 18 runs)
+  ok    wrote docs/index.html (89.6 KB, 18 runs)
   ok    19 passed in the browser page check
 
 6. real Next.js and real Chromium
@@ -325,7 +333,7 @@ hydration-diff verification
 
 9. the README is part of the deliverable
   ok    README.md carries a Status section with this script's success line
-  ok    README states "49 unit tests", which matches this run
+  ok    README states "51 unit tests", which matches this run
   ok    README states "18 live runs", which matches this run
   ok    README states "7 distinct causes", which matches this run
   ok    README states "10 scenarios", which matches this run

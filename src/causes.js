@@ -74,20 +74,6 @@ export const CAUSE_FIXES = {
     'None of the known causes fired. The diff below is still the real divergence; start from its path.',
 };
 
-function collectElements(node, path = [], out = []) {
-  if (node.t === 'el') out.push({ node, path: path.join(' > ') });
-  if (node.children) {
-    const counts = new Map();
-    for (const child of node.children) {
-      const kind = child.t === 'el' ? child.tag : (child.t === 'text' ? '#text' : '#comment');
-      const n = counts.get(kind) ?? 0;
-      counts.set(kind, n + 1);
-      collectElements(child, [...path, `${kind}[${n}]`], out);
-    }
-  }
-  return out;
-}
-
 /**
  * Find the specific nesting violation in the tree as authored. Structural, not statistical: it
  * walks ancestors, so `<p><span><div>` is found as well as `<p><div>`.
@@ -127,10 +113,15 @@ export function findNestingViolations(emittedTree) {
       const kind = child.t === 'el' ? child.tag : (child.t === 'text' ? '#text' : '#comment');
       const n = counts.get(kind) ?? 0;
       counts.set(kind, n + 1);
+      // Same step format the diff uses, including the `#id` decoration, so a path in a cause
+      // and a path in a diff can be compared by eye.
+      const step = child.t === 'el' && child.attrs.id
+        ? `${child.tag}#${child.attrs.id}[${n}]`
+        : `${kind}[${n}]`;
       walk(
         child,
         node.t === 'el' ? [...ancestors, node] : ancestors,
-        [...path, `${kind}[${n}]`],
+        [...path, step],
       );
     }
   };
@@ -138,25 +129,26 @@ export function findNestingViolations(emittedTree) {
   return found;
 }
 
-function extensionFor(ops, preHydrationTree) {
+function extensionFor(ops) {
+  // Scoped to the mutation itself, deliberately. An earlier version also swept every attribute
+  // in the pre-hydration tree, which would name Grammarly for any application that carries the
+  // common `data-gramm="false"` opt-out on a textarea, whatever the actual mutation was.
   const names = new Set();
-  const attrNames = new Set();
+  const tokens = new Set();
   for (const op of ops) {
-    if (op.attr) attrNames.add(op.attr);
-    if (typeof op.right === 'string') {
-      for (const m of op.right.matchAll(/([a-zA-Z0-9_-]+)=/g)) attrNames.add(m[1]);
-    }
-    if (typeof op.left === 'string') {
-      for (const m of op.left.matchAll(/([a-zA-Z0-9_-]+)=/g)) attrNames.add(m[1]);
+    if (op.attr) tokens.add(op.attr);
+    for (const side of [op.left, op.right]) {
+      if (typeof side !== 'string') continue;
+      for (const m of side.matchAll(/([a-zA-Z0-9_:-]+)\s*=/g)) tokens.add(m[1]);
+      // Extensions are as likely to be identifiable by an id or a class as by an attribute name.
+      for (const m of side.matchAll(/(?:id|class)\s*=\s*"([^"]*)"/g)) {
+        for (const word of m[1].split(/\s+/)) if (word) tokens.add(word);
+      }
     }
   }
-  for (const { node } of collectElements(preHydrationTree)) {
-    for (const name of Object.keys(node.attrs)) attrNames.add(name);
-    if (node.attrs.id) attrNames.add(node.attrs.id);
-  }
-  for (const name of attrNames) {
+  for (const token of tokens) {
     for (const sig of EXTENSION_SIGNATURES) {
-      if (sig.match.test(name)) names.add(sig.name);
+      if (sig.match.test(token)) names.add(sig.name);
     }
   }
   return [...names];
@@ -178,7 +170,6 @@ export function classify({
   mutationDiff,
   hydrationDiff,
   emittedTree,
-  preHydrationTree,
   serverRecords = [],
   clientRecords = [],
 }) {
@@ -202,7 +193,7 @@ export function classify({
   }
 
   if (mutationOps.length > 0 || mutationDiff.ops.length > 0) {
-    const names = extensionFor(mutationDiff.ops, preHydrationTree);
+    const names = extensionFor(mutationDiff.ops);
     const entry = {
       id: 'external-dom-mutation',
       confidence: 'certain',

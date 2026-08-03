@@ -22,7 +22,7 @@ bad() { printf '  FAIL  %s\n' "$1"; fail=$((fail + 1)); }
 # so it replaces $HOME with $HOME and silently leaves the absolute path in the output.
 rel() { printf '%s' "${1/#$HOME/\~}"; }
 
-EXPECTED_UNIT_TESTS=49
+EXPECTED_UNIT_TESTS=51
 EXPECTED_SCENARIOS=10
 EXPECTED_RUNS=18
 EXPECTED_CAUSES=7

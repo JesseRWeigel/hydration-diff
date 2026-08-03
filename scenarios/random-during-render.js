@@ -50,6 +50,6 @@ export default {
       cause: 'nondeterministic-random',
       api: 'Math.random()',
     },
-    fixed: { minMismatches: 0 },
+    fixed: { minMismatches: 0, settledChange: true },
   },
 };

@@ -14,9 +14,7 @@
 //
 // Usage: node runner/render-client.mjs <scenarioId> <variant>   (server HTML on stdin)
 
-import { createElement, act } from 'react';
-import { renderToString } from 'react-dom/server';
-import { hydrateRoot } from 'react-dom/client';
+import { createElement } from 'react';
 import { JSDOM } from 'jsdom';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -64,6 +62,14 @@ for (const name of [
 }
 globalThis.self = window;
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+// react-dom is imported only now, dynamically. Static imports are hoisted above everything above,
+// so a top-level `import ... from 'react-dom/client'` would initialise React while `window` and
+// `document` were still absent. It happens to work today, and depending on that is a bet on
+// React's module initialisation staying lazy.
+const { act } = await import('react');
+const { renderToString } = await import('react-dom/server');
+const { hydrateRoot } = await import('react-dom/client');
 
 const { getScenario } = await import('../scenarios/index.js');
 const scenario = getScenario(scenarioId);
