@@ -161,7 +161,16 @@ else
 fi
 echo
 
-echo "8. hygiene"
+echo "8. the published package"
+if node scripts/check-package.mjs >"$TMP/pack.log" 2>&1; then
+  ok "$(grep -oE '[0-9]+ passed' "$TMP/pack.log" | tail -1) packing and running the tarball"
+else
+  bad "the packed tarball is broken"
+  grep '^  FAIL' "$TMP/pack.log" | head -6 | sed 's/^/        /'
+fi
+echo
+
+echo "9. hygiene"
 # Case-sensitive on purpose: AWS key ids are uppercase by definition, and a case-insensitive
 # sweep matches base64 inside any embedded image.
 if git grep -nE '(AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|sk-[A-Za-z0-9]{32,}|xox[baprs]-[A-Za-z0-9-]{10,})' -- . >"$TMP/secrets.txt" 2>/dev/null; then
@@ -216,7 +225,7 @@ else
 fi
 echo
 
-echo "9. the README is part of the deliverable"
+echo "10. the README is part of the deliverable"
 SUCCESS_LINE="hydration-diff: all checks passed"
 if [ ! -f README.md ]; then
   bad "README.md does not exist"

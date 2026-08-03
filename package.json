@@ -5,16 +5,27 @@
   "license": "MIT",
   "type": "module",
   "private": false,
-  "bin": { "hydration-diff": "bin/hydration-diff.js" },
+  "bin": {
+    "hydration-diff": "bin/hydration-diff.js"
+  },
   "scripts": {
     "test": "node --test \"test/*.test.mjs\"",
-    "capture": "node scripts/capture.mjs",
+    "capture": "node scripts/assert-scenarios.mjs",
     "docs": "node scripts/build-docs.mjs",
     "readme": "node scripts/build-readme.mjs",
     "verify": "bash scripts/verify.sh"
   },
-  "files": ["bin", "src", "scenarios", "README.md", "LICENSE"],
-  "engines": { "node": ">=20" },
+  "files": [
+    "bin",
+    "src",
+    "runner",
+    "scenarios",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "react": "19.2.8",
     "react-dom": "19.2.8"
