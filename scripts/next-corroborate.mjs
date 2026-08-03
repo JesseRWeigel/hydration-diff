@@ -57,7 +57,22 @@ if (!existsSync(join(app, 'node_modules', 'next'))) {
 
 if (!existsSync(join(app, '.next', 'BUILD_ID'))) {
   console.log('  ..    building the Next fixture (no .next present)');
-  execFileSync('npx', ['next', 'build'], { cwd: app, stdio: 'pipe' });
+  try {
+    execFileSync('npx', ['next', 'build'], { cwd: app, stdio: 'pipe' });
+  } catch (err) {
+    // Without this the failure arrives as a raw execFileSync exception whose `stderr` prints as
+    // a three-thousand element byte array, which tells the reader nothing at all.
+    console.error('The Next.js fixture failed to build, so this check cannot run.');
+    console.error('Build it by hand to see the full output:');
+    console.error('  npm --prefix fixtures/next-app install && (cd fixtures/next-app && npx next build)');
+    console.error('');
+    const text = [err.stdout, err.stderr]
+      .map((b) => (b ? b.toString('utf8') : ''))
+      .join('\n')
+      .trim();
+    console.error(text.split('\n').filter((l) => l.trim() !== '').slice(-20).join('\n'));
+    process.exit(1);
+  }
 }
 
 // https://react.dev/errors/<n>. Production React ships codes instead of sentences.

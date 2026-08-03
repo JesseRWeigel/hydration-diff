@@ -16,8 +16,13 @@ trap 'rm -rf "$TMP"' EXIT
 
 pass=0
 fail=0
+FAILED_CHECKS=$TMP/failed.txt
+: >"$FAILED_CHECKS"
 ok() { printf '  ok    %s\n' "$1"; pass=$((pass + 1)); }
-bad() { printf '  FAIL  %s\n' "$1"; fail=$((fail + 1)); }
+# Every failure is also recorded, so the summary can name them. A run whose output got truncated
+# once left a "25 passed, 1 failed" with no way to tell which check it was, and an anonymous
+# failure is barely more useful than no failure.
+bad() { printf '  FAIL  %s\n' "$1"; printf '%s\n' "$1" >>"$FAILED_CHECKS"; fail=$((fail + 1)); }
 # The escaped tilde matters: the unescaped form is tilde-expanded by bash before the substitution,
 # so it replaces $HOME with $HOME and silently leaves the absolute path in the output.
 rel() { printf '%s' "${1/#$HOME/\~}"; }
@@ -242,4 +247,6 @@ if [ "$fail" -eq 0 ]; then
   echo "  $SUCCESS_LINE"
   exit 0
 fi
+echo "  failed checks:"
+sed 's/^/    - /' "$FAILED_CHECKS"
 exit 1

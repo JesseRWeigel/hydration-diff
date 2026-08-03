@@ -201,7 +201,8 @@ details.raw pre { margin: 0; padding: 0 14px 14px; font-size: 0.78rem; overflow-
 footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem; }
 table.matrix { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 .scroller { overflow-x: auto; }
-table.matrix th, table.matrix td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; white-space: nowrap; }
+table.matrix th, table.matrix td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; white-space: nowrap; vertical-align: top; }
+table.matrix td.causes { white-space: normal; min-width: 14ch; }
 table.matrix th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
 td.yes { color: var(--accent); font-weight: 600; }
 td.no { color: var(--server); }
@@ -395,7 +396,7 @@ const matrixRows = payload.runs.map((r) => `<tr>
       <td class="${r.counts.hydration > 0 ? 'yes' : 'no'}">${r.counts.hydration}</td>
       <td>${r.counts.repair}</td>
       <td>${r.counts.mutationAnywhere}</td>
-      <td>${esc(r.causes.map((c) => c.id).join(', ') || 'none')}</td>
+      <td class="causes">${esc([...new Set(r.causes.map((c) => c.id))].join(', ') || 'none')}</td>
       <td class="${r.react.recoverable.length > 0 ? 'yes' : 'no'}">${r.react.recoverable.length > 0 ? 'yes' : 'no'}</td>
     </tr>`).join('\n    ');
 
@@ -415,10 +416,11 @@ const html = `<!doctype html>
     <button id="theme-toggle" class="theme-toggle" type="button">Dark theme</button>
   </div>
   <p class="lede">
-    React tells you that hydration failed. It does not tell you which line caused it, and for two
-    of the eight causes below it does not describe the divergence accurately either. This captures
-    the HTML the server sent, the DOM the browser built from it, the DOM at the instant hydration
-    began, and what the client render actually produced, then diffs the four node by node.
+    React tells you that hydration failed. It does not tell you which line caused it, and on two
+    of the eight broken scenarios below it does not describe the divergence accurately either.
+    This captures the HTML the server sent, the DOM the browser built from it, the DOM at the
+    instant hydration began, and what the client render actually produced, then diffs the four
+    node by node.
   </p>
 
   <div class="stats">

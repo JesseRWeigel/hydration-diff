@@ -307,7 +307,7 @@ hydration-diff verification
   ok    6 passed in the independent checker
 
 5. the page, in a real browser
-  ok    wrote docs/index.html (89.6 KB, 18 runs)
+  ok    wrote docs/index.html (89.8 KB, 18 runs)
   ok    19 passed in the browser page check
 
 6. real Next.js and real Chromium
