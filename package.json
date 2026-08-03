@@ -1,0 +1,26 @@
+{
+  "name": "hydration-diff",
+  "version": "0.1.0",
+  "description": "Capture the server HTML and the client render of a React tree, diff them node by node, and name the cause of the hydration mismatch",
+  "license": "MIT",
+  "type": "module",
+  "private": false,
+  "bin": { "hydration-diff": "bin/hydration-diff.js" },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "capture": "node scripts/capture.mjs",
+    "docs": "node scripts/build-docs.mjs",
+    "readme": "node scripts/build-readme.mjs",
+    "verify": "bash scripts/verify.sh"
+  },
+  "files": ["bin", "src", "scenarios", "README.md", "LICENSE"],
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "playwright-core": "1.58.2"
+  }
+}
