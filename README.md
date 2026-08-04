@@ -286,7 +286,7 @@ page, so the check saw nothing on routes that were definitely failing.
 ```
 $ bash scripts/verify.sh
 hydration-diff verification
-  node v24.13.0, python 3.12.3, repo ~/Projects/thousand/projects/hydration-diff
+  node v24.13.0, python 3.12.3, repo <repo>/hydration-diff
 
 1. dependencies
   ok    react 19.2.8
