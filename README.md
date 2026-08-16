@@ -4,6 +4,8 @@ Capture the HTML a React server render emitted, the DOM a browser built from it,
 instant hydration began, and the tree the client render produced. Diff the four node by node, and
 name the cause.
 
+**[Explore all eight broken scenarios →](https://jesserweigel.github.io/hydration-diff/)**
+
 React's hydration error tells you that the trees disagreed. It does not tell you which line made
 them disagree, and it does not distinguish "your component read the clock" from "an extension
 inserted a div" from "the parser rewrote your markup before React ever saw it". Those are
