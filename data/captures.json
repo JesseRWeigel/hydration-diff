@@ -35,11 +35,11 @@
         }
       },
       "html": {
-        "serverEmitted": "<div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"n60y0dpm\">24% off, code n60y0dpm</span></div>",
-        "parsedBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"n60y0dpm\">24% off, code n60y0dpm</span></div></div></body>",
-        "preHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"n60y0dpm\">24% off, code n60y0dpm</span></div></div></body>",
-        "clientRender": "<div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"229wl7ld\">18% off, code 229wl7ld</span></div>",
-        "postHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"lkp225rf\">11% off, code lkp225rf</span></div></div></body>"
+        "serverEmitted": "<div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"cpbbbw9b\">20% off, code cpbbbw9b</span></div>",
+        "parsedBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"cpbbbw9b\">20% off, code cpbbbw9b</span></div></div></body>",
+        "preHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"cpbbbw9b\">20% off, code cpbbbw9b</span></div></div></body>",
+        "clientRender": "<div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"casjt05z\">3% off, code casjt05z</span></div>",
+        "postHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"jumb39a9\">24% off, code jumb39a9</span></div></div></body>"
       },
       "diffs": {
         "repair": {
@@ -59,15 +59,15 @@
               "path": "body[0] > div#root[0] > div[0] > span[0]",
               "attr": "data-variant",
               "scope": "in-root",
-              "left": "n60y0dpm",
-              "right": "229wl7ld"
+              "left": "cpbbbw9b",
+              "right": "casjt05z"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > span[0] > #text[0]",
               "scope": "in-root",
-              "left": "24% off, code n60y0dpm",
-              "right": "18% off, code 229wl7ld"
+              "left": "20% off, code cpbbbw9b",
+              "right": "3% off, code casjt05z"
             }
           ],
           "leftLabel": "DOM at hydration time",
@@ -80,15 +80,15 @@
               "path": "body[0] > div#root[0] > div[0] > span[0]",
               "attr": "data-variant",
               "scope": "in-root",
-              "left": "n60y0dpm",
-              "right": "lkp225rf"
+              "left": "cpbbbw9b",
+              "right": "jumb39a9"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > span[0] > #text[0]",
               "scope": "in-root",
-              "left": "24% off, code n60y0dpm",
-              "right": "11% off, code lkp225rf"
+              "left": "20% off, code cpbbbw9b",
+              "right": "24% off, code jumb39a9"
             }
           ],
           "leftLabel": "DOM at hydration time",
@@ -151,14 +151,14 @@
           "path": "body[0] > div#root[0] > div[0] > span[0]",
           "attr": "data-variant",
           "scope": "in-root",
-          "left": "n60y0dpm",
-          "right": "229wl7ld"
+          "left": "cpbbbw9b",
+          "right": "casjt05z"
         }
       },
       "react": {
         "recoverable": [
           {
-            "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <BrokenOffer>\n    <div className=\"card\">\n      <h2>\n      <p>\n      <span\n        className=\"badge\"\n+       data-variant=\"i8tmalue\"\n-       data-variant=\"n60y0dpm\"\n      >\n+       27% off, code i8tmalue\n-       24% off, code n60y0dpm\n",
+            "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <BrokenOffer>\n    <div className=\"card\">\n      <h2>\n      <p>\n      <span\n        className=\"badge\"\n+       data-variant=\"ar8t992n\"\n-       data-variant=\"cpbbbw9b\"\n      >\n+       8% off, code ar8t992n\n-       20% off, code cpbbbw9b\n",
             "componentStack": "at span (<anonymous>)\n    at div (<anonymous>)\n    at BrokenOffer (<anonymous>)"
           }
         ],
@@ -322,7 +322,7 @@
         "parsedBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"baseline\">0% off, code baseline</span></div></div></body>",
         "preHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"baseline\">0% off, code baseline</span></div></div></body>",
         "clientRender": "<div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"baseline\">0% off, code baseline</span></div>",
-        "postHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"fagcq82v\">20% off, code fagcq82v</span></div></div></body>"
+        "postHydrationBody": "<body><div id=\"root\"><div class=\"card\"><h2>Winter jacket</h2><p class=\"price\">$120.00</p><span class=\"badge\" data-variant=\"50eu2819\">29% off, code 50eu2819</span></div></div></body>"
       },
       "diffs": {
         "repair": {
@@ -348,14 +348,14 @@
               "attr": "data-variant",
               "scope": "in-root",
               "left": "baseline",
-              "right": "fagcq82v"
+              "right": "50eu2819"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > span[0] > #text[0]",
               "scope": "in-root",
               "left": "0% off, code baseline",
-              "right": "20% off, code fagcq82v"
+              "right": "29% off, code 50eu2819"
             }
           ],
           "leftLabel": "DOM at hydration time",
@@ -488,11 +488,11 @@
         }
       },
       "html": {
-        "serverEmitted": "<div class=\"stamp\"><time dateTime=\"2026-09-04T20:34:42.841Z\">20:34:42.841</time><p class=\"epoch\">epoch 1788554082842</p></div>",
-        "parsedBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:34:42.841Z\">20:34:42.841</time><p class=\"epoch\">epoch 1788554082842</p></div></div></body>",
-        "preHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:34:42.841Z\">20:34:42.841</time><p class=\"epoch\">epoch 1788554082842</p></div></div></body>",
-        "clientRender": "<div class=\"stamp\"><time dateTime=\"2026-09-04T20:34:43.731Z\">20:34:43.731</time><p class=\"epoch\">epoch 1788554083731</p></div>",
-        "postHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:34:43.751Z\">20:34:43.751</time><p class=\"epoch\">epoch 1788554083751</p></div></div></body>"
+        "serverEmitted": "<div class=\"stamp\"><time dateTime=\"2026-09-04T20:45:32.987Z\">20:45:32.987</time><p class=\"epoch\">epoch 1788554732987</p></div>",
+        "parsedBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:45:32.987Z\">20:45:32.987</time><p class=\"epoch\">epoch 1788554732987</p></div></div></body>",
+        "preHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:45:32.987Z\">20:45:32.987</time><p class=\"epoch\">epoch 1788554732987</p></div></div></body>",
+        "clientRender": "<div class=\"stamp\"><time dateTime=\"2026-09-04T20:45:33.480Z\">20:45:33.480</time><p class=\"epoch\">epoch 1788554733480</p></div>",
+        "postHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:45:33.491Z\">20:45:33.491</time><p class=\"epoch\">epoch 1788554733491</p></div></div></body>"
       },
       "diffs": {
         "repair": {
@@ -512,22 +512,22 @@
               "path": "body[0] > div#root[0] > div[0] > time[0]",
               "attr": "datetime",
               "scope": "in-root",
-              "left": "2026-09-04T20:34:42.841Z",
-              "right": "2026-09-04T20:34:43.731Z"
+              "left": "2026-09-04T20:45:32.987Z",
+              "right": "2026-09-04T20:45:33.480Z"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > time[0] > #text[0]",
               "scope": "in-root",
-              "left": "20:34:42.841",
-              "right": "20:34:43.731"
+              "left": "20:45:32.987",
+              "right": "20:45:33.480"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > p[0] > #text[0]",
               "scope": "in-root",
-              "left": "epoch 1788554082842",
-              "right": "epoch 1788554083731"
+              "left": "epoch 1788554732987",
+              "right": "epoch 1788554733480"
             }
           ],
           "leftLabel": "DOM at hydration time",
@@ -540,22 +540,22 @@
               "path": "body[0] > div#root[0] > div[0] > time[0]",
               "attr": "datetime",
               "scope": "in-root",
-              "left": "2026-09-04T20:34:42.841Z",
-              "right": "2026-09-04T20:34:43.751Z"
+              "left": "2026-09-04T20:45:32.987Z",
+              "right": "2026-09-04T20:45:33.491Z"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > time[0] > #text[0]",
               "scope": "in-root",
-              "left": "20:34:42.841",
-              "right": "20:34:43.751"
+              "left": "20:45:32.987",
+              "right": "20:45:33.491"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > p[0] > #text[0]",
               "scope": "in-root",
-              "left": "epoch 1788554082842",
-              "right": "epoch 1788554083751"
+              "left": "epoch 1788554732987",
+              "right": "epoch 1788554733491"
             }
           ],
           "leftLabel": "DOM at hydration time",
@@ -616,14 +616,14 @@
           "path": "body[0] > div#root[0] > div[0] > time[0]",
           "attr": "datetime",
           "scope": "in-root",
-          "left": "2026-09-04T20:34:42.841Z",
-          "right": "2026-09-04T20:34:43.731Z"
+          "left": "2026-09-04T20:45:32.987Z",
+          "right": "2026-09-04T20:45:33.480Z"
         }
       },
       "react": {
         "recoverable": [
           {
-            "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <BrokenReceiptStamp>\n    <div className=\"stamp\">\n      <time\n+       dateTime=\"2026-09-04T20:34:43.747Z\"\n-       dateTime=\"2026-09-04T20:34:42.841Z\"\n      >\n+       20:34:43.747\n-       20:34:42.841\n      ...\n",
+            "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <BrokenReceiptStamp>\n    <div className=\"stamp\">\n      <time\n+       dateTime=\"2026-09-04T20:45:33.488Z\"\n-       dateTime=\"2026-09-04T20:45:32.987Z\"\n      >\n+       20:45:33.488\n-       20:45:32.987\n      ...\n",
             "componentStack": "at time (<anonymous>)\n    at div (<anonymous>)\n    at BrokenReceiptStamp (<anonymous>)"
           }
         ],
@@ -777,7 +777,7 @@
         "parsedBody": "<body><div id=\"root\"><div class=\"stamp\"><time>--:--:--.---</time><p class=\"epoch\">epoch --</p></div></div></body>",
         "preHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time>--:--:--.---</time><p class=\"epoch\">epoch --</p></div></div></body>",
         "clientRender": "<div class=\"stamp\"><time>--:--:--.---</time><p class=\"epoch\">epoch --</p></div>",
-        "postHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:34:44.828Z\">20:34:44.828</time><p class=\"epoch\">epoch 1788554084828</p></div></div></body>"
+        "postHydrationBody": "<body><div id=\"root\"><div class=\"stamp\"><time datetime=\"2026-09-04T20:45:34.083Z\">20:45:34.083</time><p class=\"epoch\">epoch 1788554734083</p></div></div></body>"
       },
       "diffs": {
         "repair": {
@@ -803,21 +803,21 @@
               "attr": "datetime",
               "scope": "in-root",
               "left": null,
-              "right": "2026-09-04T20:34:44.828Z"
+              "right": "2026-09-04T20:45:34.083Z"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > time[0] > #text[0]",
               "scope": "in-root",
               "left": "--:--:--.---",
-              "right": "20:34:44.828"
+              "right": "20:45:34.083"
             },
             {
               "kind": "text-changed",
               "path": "body[0] > div#root[0] > div[0] > p[0] > #text[0]",
               "scope": "in-root",
               "left": "epoch --",
-              "right": "epoch 1788554084828"
+              "right": "epoch 1788554734083"
             }
           ],
           "leftLabel": "DOM at hydration time",
