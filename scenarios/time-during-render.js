@@ -37,6 +37,10 @@ export default {
   summary:
     'The current time is read during render. The server render and the client render happen at different instants, so the text and the datetime attribute both diverge.',
   fix: 'Render a placeholder and set the real time in an effect, or pass a timestamp captured once.',
+  // Reads the clock during render, so its recording legitimately differs between runs. See the
+  // note on random-during-render: this flag is the single source both verify.sh and the README
+  // generator read.
+  nondeterministic: true,
   variants: { broken: BrokenReceiptStamp, fixed: FixedReceiptStamp },
   expect: {
     broken: {

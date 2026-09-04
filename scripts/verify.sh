@@ -31,6 +31,17 @@ EXPECTED_UNIT_TESTS=51
 EXPECTED_SCENARIOS=10
 EXPECTED_RUNS=18
 EXPECTED_CAUSES=7
+# The scenarios whose recording is ALLOWED to differ from one run to the next, because each is
+# built on a value that is not fixed. Everything else must come back byte identical, and the check
+# further down is what stops that claim in the README from being a promise nobody tests.
+#
+# READ FROM THE SCENARIOS THEMSELVES, not written out here. A scenario declares `nondeterministic`
+# next to its own component, which is where somebody adding one would look. A list kept here would
+# be a second place to remember, and the README generator would be a third.
+EXPECTED_MOVERS=$(node -e '
+const { scenarios } = await import("./scenarios/index.js");
+process.stdout.write(scenarios.filter((s) => s.nondeterministic).map((s) => s.id).sort().join(","));
+' --input-type=module)
 
 echo "hydration-diff verification"
 echo "  node $(node -v), python $(python3 --version 2>&1 | cut -d' ' -f2), repo $(rel "$ROOT")"
@@ -113,6 +124,35 @@ if [ "$causes" = "$EXPECTED_CAUSES" ]; then
   ok "$causes distinct causes reproduced"
 else
   bad "expected $EXPECTED_CAUSES distinct causes, the recording has $causes"
+fi
+
+# WHICH SCENARIOS MOVE BETWEEN RUNS, MEASURED RATHER THAN ASSERTED IN PROSE. A verify run rewrites
+# data/captures.json, so `git status` is dirty afterwards and the README explains why. That
+# explanation names two scenarios, and naming them is only worth anything if a third one joining
+# them is caught. So the whole recording is made twice and the two are compared.
+#
+# A scenario that starts moving is the interesting failure: it means something that was supposed to
+# be settled, a locale, a storage read, a parser repair, has picked up a dependence on the clock or
+# the process or the machine. That is invisible to every other check here, all of which look at one
+# run at a time.
+cp data/captures.json "$TMP/first.json"
+if node scripts/assert-scenarios.mjs >"$TMP/live2.log" 2>&1; then
+  movers=$(node -e '
+const first = require(process.argv[1]).captures;
+const second = require("./data/captures.json").captures;
+const moved = new Set();
+first.forEach((capture, index) => {
+  if (JSON.stringify(capture) !== JSON.stringify(second[index])) moved.add(capture.scenario.id);
+});
+process.stdout.write([...moved].sort().join(","));
+' "$TMP/first.json")
+  if [ "$movers" = "$EXPECTED_MOVERS" ]; then
+    ok "recorded twice: only ${EXPECTED_MOVERS} differ between the two runs"
+  else
+    bad "between two runs the scenarios that differ are [$movers], documented as [$EXPECTED_MOVERS]"
+  fi
+else
+  bad "the second recording did not complete, so run-to-run stability was not measured"
 fi
 echo
 

@@ -26,6 +26,16 @@ const causeIds = [...new Set(runs.filter((c) => !c.scenario.control && c.scenari
 const brokenRuns = runs.filter((c) => c.counts.hydration > 0).length;
 const unitTests = 51;
 
+// Which scenarios are allowed to differ from one run to the next, read from the scenario
+// definitions rather than listed here. scripts/verify.sh reads the same declaration, so the
+// paragraph this produces and the check that enforces it cannot disagree.
+const { scenarios: allScenarios } = await import(join(root, 'scenarios', 'index.js'));
+const movers = allScenarios.filter((s) => s.nondeterministic).map((s) => s.id).sort();
+const scenarioCount = allScenarios.length;
+const moverCount = movers.length;
+const settledCount = scenarioCount - moverCount;
+const moverList = movers.map((id) => `\`${id}\``).join(' and ');
+
 function runCli(id, variant) {
   return execFileSync(process.execPath, [join(root, 'bin', 'hydration-diff.js'), 'run', id, variant], {
     cwd: root, encoding: 'utf8', env: { ...process.env }, maxBuffer: 8 * 1024 * 1024,
@@ -109,6 +119,23 @@ does not perform.
 The mismatch React reports is 3 against 4. The cause may be in 1 against 2 (the parser) or in
 2 against 3 (an extension), and in both of those cases every minute spent reading the component is
 wasted.
+
+## Why \`git status\` is dirty after a verify run
+
+\`scripts/verify.sh\` runs every scenario for real, against real React, and writes what came back to
+\`data/captures.json\`. The published page is then built from that recording, so it cannot show a
+number nobody measured. That is deliberate, and it means a verify run legitimately modifies tracked
+files: the recording and the page built from it.
+
+${moverCount} of the ${scenarioCount} scenarios move between runs, and each moves on purpose, because each is
+built on a value that is not fixed: ${moverList}. Every scenario is recorded twice, once
+through the authored engine and once through the real Next.js build. Pinning the seed or freezing
+the clock would delete the mismatch those scenarios exist to produce.
+
+The other ${settledCount} scenarios are byte identical from one run to the next, and that is not a promise:
+verify.sh records the whole corpus twice and fails if the set of scenarios that differ is not
+exactly the set declared \`nondeterministic\`. A scenario that starts moving means something that was
+supposed to be settled has picked up a dependence on the clock, the process, or the machine.
 
 ## The causes, and the fixed version of each
 

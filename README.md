@@ -4,8 +4,6 @@ Capture the HTML a React server render emitted, the DOM a browser built from it,
 instant hydration began, and the tree the client render produced. Diff the four node by node, and
 name the cause.
 
-**[Explore all eight broken scenarios →](https://jesserweigel.github.io/hydration-diff/)**
-
 React's hydration error tells you that the trees disagreed. It does not tell you which line made
 them disagree, and it does not distinguish "your component read the clock" from "an extension
 inserted a div" from "the parser rewrote your markup before React ever saw it". Those are
@@ -85,19 +83,18 @@ wasted.
 
 `scripts/verify.sh` runs every scenario for real, against real React, and writes what came back to
 `data/captures.json`. The published page is then built from that recording, so it cannot show a
-number nobody measured. That is deliberate, and it means a verify run legitimately modifies two
-tracked files: the recording and the page built from it.
+number nobody measured. That is deliberate, and it means a verify run legitimately modifies tracked
+files: the recording and the page built from it.
 
-Most of what changes between runs is cosmetic, the invented prices and variant ids the scenarios
-generate. One scenario is different on purpose. `random-during-render` exists to demonstrate a
-component calling `Math.random()` while rendering, so the server and the client necessarily
-disagree and necessarily disagree differently every time. Seeding it would remove the mismatch the
-scenario is there to produce.
+2 of the 10 scenarios move between runs, and each moves on purpose, because each is
+built on a value that is not fixed: `random-during-render` and `time-during-render`. Every scenario is recorded twice, once
+through the authored engine and once through the real Next.js build. Pinning the seed or freezing
+the clock would delete the mismatch those scenarios exist to produce.
 
-So a dirty tree after a verify run is expected here, and the thing to check is that the FINDINGS
-are unchanged: which scenarios mismatch, and which cause each is attributed to. Those are stable,
-and `scripts/assert-scenarios.mjs` asserts them on every run before anything is written.
-
+The other 8 scenarios are byte identical from one run to the next, and that is not a promise:
+verify.sh records the whole corpus twice and fails if the set of scenarios that differ is not
+exactly the set declared `nondeterministic`. A scenario that starts moving means something that was
+supposed to be settled has picked up a dependence on the clock, the process, or the machine.
 
 ## The causes, and the fixed version of each
 
@@ -107,7 +104,7 @@ than no detector.
 
 | Scenario | Cause | Broken variant | Fixed variant | Blamed site |
 | --- | --- | --- | --- | --- |
-| `random-during-render` | `nondeterministic-random` | 3 mismatches | clean | `scenarios/random-during-render.js:7` |
+| `random-during-render` | `nondeterministic-random` | 2 mismatches | clean | `scenarios/random-during-render.js:20` |
 | `time-during-render` | `nondeterministic-time` | 3 mismatches | clean | `scenarios/time-during-render.js:8` |
 | `env-branch` | `environment-branch` | 2 mismatches | clean | `scenarios/env-branch.js:27` |
 | `locale-timezone` | `locale-or-timezone` | 2 mismatches | clean | `scenarios/locale-timezone.js:16` |
@@ -203,7 +200,7 @@ that is mostly not true, and the honest version is narrower.
 
 | Scenario | React's message | React's innermost frame | The actual first divergence | This tool's blame |
 | --- | --- | --- | --- | --- |
-| `random-during-render` | text mismatch | `at p (<anonymous>)` | `body[0] > div#root[0] > div[0] > p[0] > #text[0]` | `scenarios/random-during-render.js:7` |
+| `random-during-render` | text mismatch | `at span (<anonymous>)` | `body[0] > div#root[0] > div[0] > span[0]` | `scenarios/random-during-render.js:20` |
 | `time-during-render` | text mismatch | `at time (<anonymous>)` | `body[0] > div#root[0] > div[0] > time[0]` | `scenarios/time-during-render.js:8` |
 | `env-branch` | HTML mismatch | `at article (<anonymous>)` | `body[0] > div#root[0] > section[0]` | `scenarios/env-branch.js:27` |
 | `locale-timezone` | text mismatch | `at dd (<anonymous>)` | `body[0] > div#root[0] > dl[0] > dd[0] > #text[0]` | `scenarios/locale-timezone.js:16` |
