@@ -81,6 +81,24 @@ The mismatch React reports is 3 against 4. The cause may be in 1 against 2 (the 
 2 against 3 (an extension), and in both of those cases every minute spent reading the component is
 wasted.
 
+## Why `git status` is dirty after a verify run
+
+`scripts/verify.sh` runs every scenario for real, against real React, and writes what came back to
+`data/captures.json`. The published page is then built from that recording, so it cannot show a
+number nobody measured. That is deliberate, and it means a verify run legitimately modifies two
+tracked files: the recording and the page built from it.
+
+Most of what changes between runs is cosmetic, the invented prices and variant ids the scenarios
+generate. One scenario is different on purpose. `random-during-render` exists to demonstrate a
+component calling `Math.random()` while rendering, so the server and the client necessarily
+disagree and necessarily disagree differently every time. Seeding it would remove the mismatch the
+scenario is there to produce.
+
+So a dirty tree after a verify run is expected here, and the thing to check is that the FINDINGS
+are unchanged: which scenarios mismatch, and which cause each is attributed to. Those are stable,
+and `scripts/assert-scenarios.mjs` asserts them on every run before anything is written.
+
+
 ## The causes, and the fixed version of each
 
 18 live runs, 8 of which have a real mismatch. Every cause ships a fixed
